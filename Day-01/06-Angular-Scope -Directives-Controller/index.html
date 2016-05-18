@@ -40,26 +40,21 @@
 		
 		
 
-		//View
-		/*$(function(){
-			angular.injector(["ng"]).invoke(function($rootScope, $compile){
-				window.scope = $rootScope;
-				scope.calculator = window.calculator = new SalaryCalculator();
-				$compile(document.body)(scope);
-			});
-		});*/
+		
 
-		angular.module("ng").run(function($rootScope, $compile, $http, $q){
-			window.rootScope = $rootScope;
-			//console.log(arguments);
-			//$rootScope.calculator = new SalaryCalculator();
+		var myApp = angular.module("myApp", [])
+		myApp.run(function($rootScope){
+			$rootScope.appName = 'Salary Calculator';
+		});
+		myApp.controller("calculatorController", function($scope){
+			$scope.calculator = new SalaryCalculator();
 		});
 	</script>
 </head>
-<body ng-app>
-	<h1>Salary Calculator</h1>
+<body ng-app="myApp">
+	<h1 ng-bind="appName"></h1>
 	<hr>
-	<div class="content">
+	<div class="content" ng-controller="calculatorController">
 		<div class="field">
 			<label for="">Basic :</label>
 			<input type="number" id="txtBasic" ng-model="calculator.basic">
@@ -83,6 +78,18 @@
 		<div class="field">
 			<div id="divResult" ng-bind="calculator.salary | currency:'Rs'">[Salary]</div>
 		</div>
+		<hr>
+		<small><i><b><span ng-bind="appName"></span></b><span> created for Cisco</span></i></small>
+	</div>
+	<div class="content">
+		<h3>Math Calculator</h3>
+		<input type="text" name="" id="">
+		<input type="text" name="" id="">
+		<input type="button" value="Add">
+		<input type="button" value="Subtract">
+		<input type="button" value="Multiply">
+		<input type="button" value="Divide">
+		<div id="divResult">[Result]</div>
 	</div>
 </body>
 </html>

@@ -1,0 +1,15 @@
+Buildings Blocks of Angular
+
+1. Module
+	DI Container
+
+2. Scope
+3. Directive
+4. Filter
+5. Controller
+
+6. Value
+7. Factory
+8. Service
+9. Constant
+10. Provider
