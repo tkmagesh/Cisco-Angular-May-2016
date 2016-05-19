@@ -29,12 +29,24 @@
 	.bugName{
 		cursor : pointer;
 	}
+	.selected{
+		position: absolute;
+		bottom: 0px;
+		right : 0px;
+		margin : 10px;
+		border : 1px solid black;
+		background-color: black;
+		color : yellow;
+		font-size: 15pt;
+		font-weight: bold;
+		padding : 10px;
+	}
 	</style>
 	<script type="text/javascript">
 	/*
 		1. Add a new bug - done
 		2. List the bugs - done
-		3. Toggle the 'closed' status of the bug
+		3. Toggle the 'closed' status of the bug - done
 		4. Remove closed bugs
 		5. Display statistics
 		6. Search for the bugs
@@ -63,6 +75,13 @@
 					isClosed : false
 				};
 				$scope.bugs.push(newBug);
+			};
+			$scope.toggleBug = function(bug){
+				bug.isClosed = !bug.isClosed;
+			};
+			$scope.selectedBug = null;
+			$scope.setSelectedBug = function(bug){
+				$scope.selectedBug = bug;
 			};
 		});
 
@@ -98,7 +117,9 @@
 		<section class="list">
 			<ol>
 				<li ng-repeat="bug in bugs track by $index">
-					<span class="bugName">{{bug}}</span>
+					<span class="bugName" ng-click="toggleBug(bug)" ng-class="{closed :bug.isClosed}">
+						{{bug}}
+					</span>
 				</li>
 			</ol>
 			<input type="button" value="Remove Closed">
