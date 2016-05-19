@@ -51,8 +51,24 @@
 		5. Display statistics - done
 		6. Search for the bugs - done
 		7. Sort the bugs - done
-		8. Improvise the bug display
+		8. Improvise the bug display - done
 		9. Persist the bugs in the localStorage
+		Assignment:
+			window.localStorage
+			===================
+			key/value store
+			key -> unique
+			value -> string (use angular.toJson() and angular.fromJson() for serialization / deseralization)
+
+			APIs
+			----
+				- setItem(key, value)
+				- getItem(key) => returns value
+				- removeItem(key)
+				- key(index) => return key at index
+				- clear()
+				- length
+
 		10. Display 'createdAt' for each bug
 		11. Persist the bugs in the server
 		12. Make the bugs accessible through URL
@@ -60,6 +76,7 @@
 	*/
 	</script>
 	<script src="angular.min.js"></script>
+	<script src="moment.js"></script>
 	<script>
 		var bugTrackerApp = angular.module("bugTrackerApp", []);
 
@@ -75,7 +92,8 @@
 					return {
 						id : ++bugCount,
 						name : bugName || defaultBugName,
-						isClosed : false
+						isClosed : false,
+						createdAt : new Date()
 					}
 				}
 			}
@@ -83,10 +101,14 @@
 
 		bugTrackerApp.controller("bugsController", function($scope, bugOperations){
 			$scope.bugs = [
-				bugOperations.create("Object reference not found"),
+				/*bugOperations.create("Object reference not found"),
 				bugOperations.create("invalid phone number"),
 				bugOperations.create("user authentication failure"),
-				bugOperations.create("server communication error"),
+				bugOperations.create("server communication error"),*/
+
+				{id : 1, name : "Object reference not found", isClosed : false, createdAt : new Date(2016,4,18,9,0,0)},
+				{id : 1, name : "invalid phone number", isClosed : false, createdAt : new Date(2016,4,19,10,0,0)},
+				{id : 1, name : "user authentication failure", isClosed : false, createdAt : new Date(2016,4,19,13,0,0)},
 			];
 			$scope.addNew = function(newBugName){
 				var newBug = bugOperations.create(newBugName);
@@ -101,9 +123,7 @@
 					if ($scope.bugs[i].isClosed)
 						$scope.bugs.splice(i,1);
 			};
-			$scope.getClosedCount = function(){
-				
-			};
+			
 		});
 
 		bugTrackerApp.value('defaultTrimLength', 20);
@@ -149,6 +169,12 @@
 		 	}
 		 });
 
+		 bugTrackerApp.value('momentApi', moment);
+		 bugTrackerApp.filter('toMoment', function(momentApi){
+		 	return function(date){
+		 		return momentApi(date).fromNow();
+		 	}
+		 });
 	</script>
 </head>
 <body ng-app="bugTrackerApp">
@@ -189,6 +215,9 @@
 					<span class="bugName" ng-click="toggleBug(bug)" ng-class="{closed :bug.isClosed}">
 						{{bug.name | trimText}}
 					</span>
+					<div class="datetime">
+						{{bug.createdAt | toMoment}}
+					</div>
 				</li>
 			</ol>
 			<input type="button" value="Remove Closed" ng-click="removeClosed()">
