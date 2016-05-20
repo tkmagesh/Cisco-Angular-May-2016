@@ -1,13 +1,6 @@
 {
   "bugs": [
     {
-      "id": 1,
-      "name": "RESTful services are not truly restful",
-      "isClosed": false,
-      "desc": "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmodtempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit essecillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-      "createdAt": "2016-02-03T04:05:19.327Z"
-    },
-    {
       "id": 2,
       "name": "Promises are not working",
       "isClosed": false,
@@ -26,6 +19,12 @@
       "name": "Validation failure",
       "isClosed": false,
       "createdAt": "2016-05-06T07:19:41.894Z"
+    },
+    {
+      "id": 10,
+      "name": "another new bug",
+      "isClosed": false,
+      "createdAt": "2016-05-20T07:36:49.943Z"
     }
   ]
 }
