@@ -1,0 +1,7 @@
+<h3>{{bug.name}}</h3>
+<span ng-style="{color : bug.isClosed ? 'red' : 'green'}">
+	{{bug.isClosed ? 'Closed' : 'Open'}}
+</span>
+<p>{{bug.desc}}</p>
+<hr>
+<span><i>{{created }}<b>{{bug.createdAt | toMoment}}</b></i></span>

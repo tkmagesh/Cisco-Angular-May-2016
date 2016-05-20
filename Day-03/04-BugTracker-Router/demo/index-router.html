@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Routing Demo</title>
+	<script src="angular.js"></script>
+	<script src="angular-route.js"></script>
+	<script>
+		var myApp = angular.module("myApp", ["ngRoute"]);
+		myApp.config(function($routeProvider){
+			$routeProvider
+				.when("/products", {
+					template : '<h3>Products</h3>'
+				})
+				.when("/customers", {
+					template : '<h3>Customers</h3>'
+				})
+				.otherwise({
+					redirectTo : '/products'
+				});
+		});
+	</script>
+</head>
+<body ng-app="myApp">
+	<h1>My App</h1>
+	<hr>
+	<ng-view></ng-view>
+</body>
+</html>
