@@ -75,6 +75,7 @@
 		13. Automate the testing (Unit Testing and End-To-End Testing)
 	*/
 	</script>
+	<script src="jquery-1.12.3.js"></script>
 	<script src="angular.min.js"></script>
 	<script src="angular-route.js"></script>
 	<script src="moment.js"></script>
@@ -96,6 +97,9 @@
 				.when("/bugs/:id", {
 					templateUrl : 'templates/bugInfo.html',
 					controller : 'bugInfoController'
+				})
+				.when("/dummy", {
+					template : '<div></div>'
 				})
 				.otherwise({
 					redirectTo : "/bugs"
@@ -155,23 +159,9 @@
 			}
 		});
 
-		bugTrackerApp.factory("bugService", function($http, $q, bugOperations){
+		/*bugTrackerApp.factory("bugService", function($http, $q, bugOperations){
 			function getAllBugs(){
-				/*var deferred = $q.defer();
-
 				
-				var promise = $http.get('http://localhost:3000/bugs');
-				promise.then(function(response){
-					deferred.resolve(response.data);
-				});
-				
-				return deferred.promise;*/
-
-				/*var httpPromise = $http.get('http://localhost:3000/bugs');
-				var myPromise = httpPromise.then(function(response){
-					return response.data;
-				});
-				return myPromise;*/
 
 				return $http
 						.get('http://localhost:3000/bugs')
@@ -215,8 +205,65 @@
 				toggle : toggleBug,
 				remove : removeBug
 			}
-		});
+		});*/
 
+		bugTrackerApp.service("bugService", function($http, $q, bugOperations){
+			var self = this;
+
+			self.getAll = function getAllBugs(){
+				/*var deferred = $q.defer();
+
+				
+				var promise = $http.get('http://localhost:3000/bugs');
+				promise.then(function(response){
+					deferred.resolve(response.data);
+				});
+				
+				return deferred.promise;*/
+
+				/*var httpPromise = $http.get('http://localhost:3000/bugs');
+				var myPromise = httpPromise.then(function(response){
+					return response.data;
+				});
+				return myPromise;*/
+
+				return $http
+						.get('http://localhost:3000/bugs')
+						.then(function(response){
+							return response.data;
+						});
+			}
+
+			self.add = function addNew(bugName){
+				var newBug = bugOperations.create(0, bugName);
+				return $http
+					.post('http://localhost:3000/bugs', newBug)
+					.then(function(response){
+						return response.data;
+					});
+			};
+
+			self.get = function getBug(id){
+				return $http
+					.get('http://localhost:3000/bugs/' + id)
+					.then(function(response){
+						return response.data;
+					});	
+			}
+
+			self.toggle = function toggleBug(bug){
+				bugOperations.toggle(bug);
+				return $http
+					.put('http://localhost:3000/bugs/' + bug.id, bug)
+					.then(function(response){
+						return response.data;
+					});
+			}
+			self.remove = function removeBug(bug){
+				return $http.delete("http://localhost:3000/bugs/" + bug.id);
+			}
+			
+		});
 		bugTrackerApp.controller("newBugController", function($scope, bugService, $location){
 			$scope.addNew = function(newBugName){
 				bugService.add(newBugName).then(function(newBug){
@@ -260,13 +307,69 @@
 		 	}
 		 });
 
+		bugTrackerApp.run(function($rootScope){
+			$rootScope.message = 'Message from rootScope';
+			$rootScope.displayClearMessage = function(){
+				$rootScope.message = 'All clear!!';
+			};
+		});
+		bugTrackerApp.directive("helloWorld", function(){
+			return {
+				restrict : 'A',
+				scope : {
+					msg : '=',
+					onClear : '&'
+				},
+				template : '<h1>{{msg}}</h1>',
+				link : function(scope, element, attr){
+					element.on('click', function(){
+						scope.msg = '';
+						scope.onClear();
+						scope.$apply();
+					});
+				}
+			}
+		});
+
+		bugTrackerApp.directive("bugItem", function($compile){
+			var longBugNameTemplate = '<span  ng-class="{closed :data.isClosed}">{{data.name | trimText}}</span> <span class="expand" href="#">more</span>';
+			var shortBugNameTemplate = '<span  ng-class="{closed :data.isClosed}">{{data.name}}</span>'
+			return {
+				restrict : 'E',
+				scope : {
+					data : '=',
+					onBugClick : '&'
+				},
+				templateUrl : 'templates/bugItem.html',
+				link : function(scope, element, attr){
+					scope.$watch('data.name', function(newValue, oldValue){
+						var output = '';
+						if (newValue < 20){
+							output = $compile(shortBugNameTemplate)(scope);
+						} else {
+							output = $compile(longBugNameTemplate)(scope);
+						}
+						console.log(output);
+						element.find('.bugName').html(output);
+					});
+					element.on('click', '.expand', function(){
+						element.find('.bugName').html(scope.data.name);
+						return false;
+					});
+				}
+			}
+		})
 		
 	</script>
 </head>
 <body ng-app="bugTrackerApp">
 	<h1>Bug Tracker</h1>
+	<!-- <h4>{{message}}</h4>
+	<input type="button" value="Change Message" ng-click="message = 'New Message from root'"> -->
 	<hr>
 	<div class="content" ng-view>
 	</div>
+	<!-- <div hello-world msg="message" on-clear="displayClearMessage()"></div> -->
+
 </body>
 </html>

@@ -1,0 +1,8 @@
+<span class="bugName" ng-click="onBugClick(data)">
+	
+</span>
+<span class="expand" ng-if="isLong">more</span>
+<div class="datetime">
+	{{data.createdAt | toMoment}}
+</div>
+<div><a href="#/bugs/{{data.id}}">More..</a></div>
